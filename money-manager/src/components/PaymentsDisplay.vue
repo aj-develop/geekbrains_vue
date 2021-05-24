@@ -10,7 +10,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="item in this.pageOfItems" :key="item.id">
+      <tr v-for="item in currentElements" :key="item.id">
         <th scope="row">{{ item.id }}</th>
         <td>{{ item.date }}</td>
         <td>{{ item.category }}</td>
@@ -18,42 +18,44 @@
       </tr>
       </tbody>
     </table>
-    <Pagination @currentPage="setCurrentPage" :paymentsListLength="items.length" />
+    <Pagination
+      @currentPage="setCurrentPage"
+      :paymentsListLength="getPaymentsList.length"
+      :itemsPerPage="itemsPerPage"
+      :cur="currentPage"
+    />
   </div>
 </template>
 
 <script>
 import Pagination from './Pagination'
 
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'PaymentsDisplay',
   components: {
     Pagination
   },
-  props: {
-    items: Array,
-    default: []
-  },
   data () {
     return {
-      itemsPerPage: 3,
-      currentPage: 1,
-      pageOfItems: []
+      itemsPerPage: 10,
+      currentPage: 1
     }
   },
   methods: {
-    setPageOfItems () {
-      const startIndex = (this.currentPage - 1) * this.itemsPerPage
-      const endIndex = (startIndex + this.itemsPerPage) - 1
-      this.pageOfItems = this.items.slice(startIndex, endIndex + 1)
-    },
     setCurrentPage (currentPage) {
       this.currentPage = currentPage
-      this.setPageOfItems()
     }
   },
-  created () {
-    this.setPageOfItems()
+  computed: {
+    ...mapGetters([
+      'getPaymentsList'
+    ]),
+    currentElements () {
+      const { itemsPerPage, currentPage } = this
+      return this.getPaymentsList.slice(itemsPerPage * (currentPage - 1), itemsPerPage * (currentPage - 1) + itemsPerPage)
+    }
   }
 }
 </script>

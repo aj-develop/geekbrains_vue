@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import { mapMutations, mapGetters } from 'vuex'
+
 export default {
   name: 'AddPaymentForm',
   props: {
@@ -32,10 +34,20 @@ export default {
     }
   },
   methods: {
+    ...mapMutations([
+      'addDataToPaymentsList'
+    ]),
     onSaveClick () {
       const { date, category, price } = this
-      this.$emit('addNewPayment', { date, category, price })
+      console.log(this.getLastId)
+      const id = this.getLastId + 1
+      this.addDataToPaymentsList({ id, date, category, price })
     }
+  },
+  computed: {
+    ...mapGetters([
+      'getLastId'
+    ])
   }
 }
 </script>
