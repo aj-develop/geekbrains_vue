@@ -20,8 +20,8 @@ const router = new Router({
       component: PageDashboard
     },
     {
-      path: '/dashboard/:page',
-      name: 'dashboard',
+      path: '/add/payment/:category',
+      name: 'addPayment',
       component: PageDashboard
     },
     {
