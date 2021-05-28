@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import AddPaymentForm from '../components/AddPaymentForm'
+import PageDashboard from '../page/PageDashboard'
+import PageAbout from '../page/PageAbout'
+import Page404 from '../page/Page404'
 
 Vue.use(Router)
 
@@ -9,9 +11,28 @@ const router = new Router({
   mode: 'history',
   routes: [
     {
-      path: '/add/payment/:category',
-      name: 'addPayment',
-      component: AddPaymentForm
+      path: '/',
+      redirect: '/dashboard'
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: PageDashboard
+    },
+    {
+      path: '/dashboard/:page',
+      name: 'dashboard',
+      component: PageDashboard
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: PageAbout
+    },
+    {
+      path: '*',
+      name: 'NotFound',
+      component: Page404
     }
   ]
 })
