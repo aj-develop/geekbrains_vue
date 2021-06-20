@@ -18,6 +18,18 @@ export default new Vuex.Store({
     addDataToPaymentsList (state, payload) {
       state.paymentsList.push(payload)
     },
+    updatePaymentsListData (state, updateItem) {
+      const updateIndex = state.paymentsList.map(function (item) {
+        return item.id
+      }).indexOf(updateItem.id)
+      state.paymentsList.splice(updateIndex, 1, updateItem)
+    },
+    removeItemFromPaymentList (state, removeItemId) {
+      const removeIndex = state.paymentsList.map(function (item) {
+        return item.id
+      }).indexOf(removeItemId)
+      state.paymentsList.splice(removeIndex, 1)
+    },
     // categories
     setCategoriesListData (state, payload) {
       if (!Array.isArray(payload)) {
@@ -33,6 +45,9 @@ export default new Vuex.Store({
     getPaymentsList: state => state.paymentsList,
     getPaymentItemLastId: state => {
       return Math.max(...state.paymentsList.map(item => item.id), 0)
+    },
+    getPaymentItemById: (state) => (id) => {
+      return state.paymentsList.find(item => item.id === id)
     },
     getCategoryList: state => state.categoryList,
     getCategoryLastId: state => {

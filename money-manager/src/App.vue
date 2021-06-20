@@ -15,6 +15,9 @@
           </div>
         </div>
       </nav>
+      <transition name="fade">
+        <Modal v-if="modalShown" :name="modalShown" :paymentId="paymentId"/>
+      </transition>
       <router-view />
     </div>
   </main>
@@ -22,6 +25,42 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    Modal: () => import('./components/modalwindows/Modal')
+  },
+  data () {
+    return {
+      modalShown: false,
+      paymentId: 0
+    }
+  },
+  methods: {
+    onShown ({ name, paymentId }) {
+      this.modalShown = name
+      this.paymentId = paymentId
+    },
+    onClose () {
+      this.modalShown = ''
+      this.paymentId = 0
+    }
+  },
+  mounted () {
+    this.$modal.EventBus.$on('show', this.onShown)
+    this.$modal.EventBus.$on('close', this.onClose)
+  },
+  beforeDestroy () {
+    this.$modal.EventBus.$off('show', this.onShown)
+    this.$modal.EventBus.$off('close', this.onClose)
+  }
 }
 </script>
+
+<style>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 1s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+</style>

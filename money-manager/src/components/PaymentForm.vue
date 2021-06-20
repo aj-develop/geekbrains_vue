@@ -54,7 +54,8 @@ import * as moment from 'moment'
 export default {
   name: 'AddPaymentForm',
   props: {
-    showFrom: Boolean
+    showFrom: Boolean,
+    paymentId: Number
   },
   data () {
     return {
@@ -67,15 +68,23 @@ export default {
   methods: {
     ...mapMutations([
       'addDataToPaymentsList',
-      'addDataToCategoryList'
+      'addDataToCategoryList',
+      'updatePaymentsListData'
     ]),
     ...mapActions([
       'loadCategories'
     ]),
     onSaveClick () {
       const { date, category, price } = this
-      const id = this.getPaymentItemLastId + 1
-      this.addDataToPaymentsList({ id, date, category, price })
+      if (this.paymentId) {
+        // update
+        const id = this.paymentId
+        this.updatePaymentsListData({ id, date, category, price })
+      } else {
+        // insert
+        const id = this.getPaymentItemLastId + 1
+        this.addDataToPaymentsList({ id, date, category, price })
+      }
     },
     onAddCategoryClick () {
       const { addedCategory } = this
@@ -92,7 +101,7 @@ export default {
           const id = this.getPaymentItemLastId + 1
           this.addDataToPaymentsList({ id, date, category, price })
         }, 250)
-      } else if (!price) {
+      } else if (category && !price) {
         this.category = category
         this.date = date
         this.showFrom = true
@@ -103,10 +112,17 @@ export default {
     ...mapGetters([
       'getPaymentItemLastId',
       'getCategoryList',
-      'getCategoryLastId'
+      'getCategoryLastId',
+      'getPaymentItemById'
     ])
   },
   mounted () {
+    if (this.paymentId) {
+      const editItem = this.getPaymentItemById(this.paymentId)
+      this.category = editItem.category
+      this.price = editItem.price
+      this.date = editItem.date
+    }
     if (!this.getCategoryList.length) {
       this.loadCategories()
     }
