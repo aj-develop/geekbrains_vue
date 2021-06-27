@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper" v-if="showFrom">
-    <form>
+    <form id="payment-form">
       <div class="mb-3">
         <label for="date" class="form-label">Date</label>
         <input v-model="date"  class="form-control" id="date">
