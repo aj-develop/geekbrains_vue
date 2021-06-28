@@ -17,11 +17,11 @@
       ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest",
       "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
     },
-    "collectCoverage": true,
-    "collectCoverageFrom": ["**/*.{js,vue}", "!**/node_modules/**"],
-    "moduleNameMapper": {
-      "vue$": "<rootDir>/node_modules/vue/dist/vue.js"
-    }
+    "collectCoverage": false,
+    "collectCoverageFrom": [
+      "**/*.{js,vue}",
+      "!**/node_modules/**"
+    ]
   },
   "dependencies": {
     "core-js": "^3.6.5",
@@ -49,6 +49,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "jest": "^26.6.3",
     "node-sass": "^4.12.0",
+    "regenerator-runtime": "^0.13.7",
     "sass-loader": "^8.0.2",
     "vue-jest": "^3.0.7",
     "vue-template-compiler": "^2.6.11"

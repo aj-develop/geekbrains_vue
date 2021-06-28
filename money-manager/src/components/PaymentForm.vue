@@ -7,7 +7,7 @@
       </div>
       <div class="mb-3">
         <label for="category" class="form-label">Category</label>
-        <button type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#categoryForm">
+        <button id="show-add-category-form" type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#categoryForm">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
             <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
@@ -24,11 +24,11 @@
         <input v-model.number="price"  class="form-control" id="price">
       </div>
     </form>
-    <button @click="onSaveClick" class="btn btn-primary btn-lg">Save</button>
+    <button id="save-data" @click="onSaveClick" class="btn btn-primary btn-lg">Save</button>
     <div class="modal fade" id="categoryForm" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
-          <form>
+          <form id="add-category">
             <div class="modal-header">
               <h5 class="modal-title" id="categoryFormLabel">Add category</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -49,12 +49,15 @@
 
 <script>
 import { mapMutations, mapGetters, mapActions } from 'vuex'
-import * as moment from 'moment'
+// import * as moment from 'moment'
 
 export default {
   name: 'AddPaymentForm',
   props: {
-    showFrom: Boolean,
+    showFrom: {
+      type: Boolean,
+      default: false
+    },
     paymentId: Number
   },
   data () {
@@ -95,7 +98,9 @@ export default {
     onPaymentRoute () {
       const category = this.$route.params.category
       const price = this.$route.query.value
-      const date = moment().format('D.MM.y')
+      // const date = moment().format('D.MM.y')
+      const d = new Date()
+      const date = d.getDate() + '.' + (d.getMonth() + 1) + '.' + d.getFullYear()
       if (category && price) {
         setTimeout(() => {
           const id = this.getPaymentItemLastId + 1
