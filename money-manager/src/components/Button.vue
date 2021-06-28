@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button v-if="!showFrom" @click="onAddClick" class="btn btn-success btn-lg">ADD NEW COST</button>
+    <button id="add-new-cost" v-if="!showFrom" @click="onAddClick" class="btn btn-success btn-lg">ADD NEW COST</button>
     <button v-if="showFrom" @click="onAddClick" class="btn btn-info btn-lg">HIDE FORM</button>
   </div>
 </template>
