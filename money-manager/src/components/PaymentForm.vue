@@ -49,6 +49,7 @@
 
 <script>
 import { mapMutations, mapGetters, mapActions } from 'vuex'
+import * as moment from 'moment'
 
 export default {
   name: 'AddPaymentForm',
@@ -81,6 +82,21 @@ export default {
       const id = this.getCategoryLastId + 1
       const name = addedCategory
       this.addDataToCategoryList({ id, name })
+    },
+    onPaymentRoute () {
+      const category = this.$route.params.category
+      const price = this.$route.query.value
+      const date = moment().format('D.MM.y')
+      if (category && price) {
+        setTimeout(() => {
+          const id = this.getPaymentItemLastId + 1
+          this.addDataToPaymentsList({ id, date, category, price })
+        }, 250)
+      } else if (!price) {
+        this.category = category
+        this.date = date
+        this.showFrom = true
+      }
     }
   },
   computed: {
@@ -94,6 +110,7 @@ export default {
     if (!this.getCategoryList.length) {
       this.loadCategories()
     }
+    this.onPaymentRoute()
   }
 }
 </script>
