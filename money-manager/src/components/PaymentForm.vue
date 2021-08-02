@@ -49,11 +49,13 @@
 
 <script>
 import { mapMutations, mapGetters, mapActions } from 'vuex'
+import * as moment from 'moment'
 
 export default {
   name: 'AddPaymentForm',
   props: {
-    showFrom: Boolean
+    showFrom: Boolean,
+    paymentId: Number
   },
   data () {
     return {
@@ -66,34 +68,65 @@ export default {
   methods: {
     ...mapMutations([
       'addDataToPaymentsList',
-      'addDataToCategoryList'
+      'addDataToCategoryList',
+      'updatePaymentsListData'
     ]),
     ...mapActions([
       'loadCategories'
     ]),
     onSaveClick () {
       const { date, category, price } = this
-      const id = this.getPaymentItemLastId + 1
-      this.addDataToPaymentsList({ id, date, category, price })
+      if (this.paymentId) {
+        // update
+        const id = this.paymentId
+        this.updatePaymentsListData({ id, date, category, price })
+      } else {
+        // insert
+        const id = this.getPaymentItemLastId + 1
+        this.addDataToPaymentsList({ id, date, category, price })
+      }
     },
     onAddCategoryClick () {
       const { addedCategory } = this
       const id = this.getCategoryLastId + 1
       const name = addedCategory
       this.addDataToCategoryList({ id, name })
+    },
+    onPaymentRoute () {
+      const category = this.$route.params.category
+      const price = this.$route.query.value
+      const date = moment().format('D.MM.y')
+      if (category && price) {
+        setTimeout(() => {
+          const id = this.getPaymentItemLastId + 1
+          this.addDataToPaymentsList({ id, date, category, price })
+        }, 250)
+      } else if (category && !price) {
+        this.category = category
+        this.date = date
+        this.showFrom = true
+      }
     }
   },
   computed: {
     ...mapGetters([
       'getPaymentItemLastId',
       'getCategoryList',
-      'getCategoryLastId'
+      'getCategoryLastId',
+      'getPaymentItemById'
     ])
   },
   mounted () {
+    if (this.paymentId) {
+      const editItem = this.getPaymentItemById(this.paymentId)
+      this.category = editItem.category
+      this.price = editItem.price
+      this.date = editItem.date
+    }
     if (!this.getCategoryList.length) {
       this.loadCategories()
     }
+    this.onPaymentRoute()
   }
 }
 </script>
